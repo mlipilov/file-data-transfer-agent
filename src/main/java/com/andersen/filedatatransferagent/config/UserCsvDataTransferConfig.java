@@ -59,6 +59,7 @@ public class UserCsvDataTransferConfig {
       final KafkaItemWriter<String, User> writer,
       final KafkaTransactionManager<String, User> kafkaTransactionManager
   ) {
+    //TODO implement read/write listeners
     return new StepBuilder(USER_JOB_STEP_NAME, jobRepository)
         .<User, User>chunk(CHUNK_SIZE, kafkaTransactionManager)
         .reader(reader)

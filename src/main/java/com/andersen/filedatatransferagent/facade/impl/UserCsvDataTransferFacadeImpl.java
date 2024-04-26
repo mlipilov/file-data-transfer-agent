@@ -33,6 +33,7 @@ public class UserCsvDataTransferFacadeImpl implements UserCsvDataTransferFacade 
   public void transferUserCsvData(final List<MultipartFile> csvData) {
     csvData.stream()
         .map(this::toJobParameters)
+        //TODO implement sorting so A job will be executed first
         .forEach(jobParam -> runJobSafe(jobLauncher, userJob, jobParam));
   }
 
