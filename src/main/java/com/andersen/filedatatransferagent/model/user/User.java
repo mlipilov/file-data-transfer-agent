@@ -1,4 +1,4 @@
-package com.andersen.filedatatransferagent.model;
+package com.andersen.filedatatransferagent.model.user;
 
 public record User(
     UserIdentity identity,

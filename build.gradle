@@ -25,6 +25,9 @@ dependencies {
     //Code gen dependencies
     implementation 'org.projectlombok:lombok'
 
+    //Utils
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
+
     //Testing dependencies
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.batch:spring-batch-test'
