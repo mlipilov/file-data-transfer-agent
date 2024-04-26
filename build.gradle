@@ -16,9 +16,16 @@ repositories {
 }
 
 dependencies {
+    //SpringBoot dependencies
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    //Code gen dependencies
+    implementation 'org.projectlombok:lombok'
+
+    //Testing dependencies
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.batch:spring-batch-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
