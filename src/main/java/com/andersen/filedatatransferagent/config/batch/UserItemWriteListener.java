@@ -1,15 +1,12 @@
 package com.andersen.filedatatransferagent.config.batch;
 
 import com.andersen.filedatatransferagent.model.user.User;
-import java.sql.PreparedStatement;
+import com.andersen.filedatatransferagent.service.UserCsvWriteErrorCollector;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.ItemWriteListener;
 import org.springframework.batch.item.Chunk;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCallback;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -17,7 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserItemWriteListener implements ItemWriteListener<User> {
 
-  private final JdbcTemplate jdbcTemplate;
+  private final UserCsvWriteErrorCollector userCsvWriteErrorCollector;
 
   @Override
   public void onWriteError(
@@ -25,8 +22,6 @@ public class UserItemWriteListener implements ItemWriteListener<User> {
       final @NonNull Chunk<? extends User> items
   ) {
     log.error(exception.getMessage(), exception);
-    final PreparedStatementCreator creator = psc -> psc.prepareStatement("");
-    final PreparedStatementCallback<Boolean> callback  = PreparedStatement::execute;
-    jdbcTemplate.execute(creator, callback);
+    userCsvWriteErrorCollector.collect(exception);
   }
 }
