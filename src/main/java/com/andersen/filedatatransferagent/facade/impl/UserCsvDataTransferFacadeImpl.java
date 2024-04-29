@@ -20,10 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class UserCsvDataTransferFacadeImpl implements UserCsvDataTransferFacade {
 
-  private static final String FIRST_JOB_PARAM_KEY = "A";
-  private static final String SECOND_JOB_PARAM_KEY = "B";
-
-  private static final String USER_CSV_FILENAME_PART = "users";
+  private static final String USER_CSV_DATA_RESOURCE = "userCsvData";
 
   private final JobLauncher jobLauncher;
   private final Job userJob;
@@ -33,16 +30,12 @@ public class UserCsvDataTransferFacadeImpl implements UserCsvDataTransferFacade 
   public void transferUserCsvData(final List<MultipartFile> csvData) {
     csvData.stream()
         .map(this::toJobParameters)
-        //TODO implement sorting so A job will be executed first
         .forEach(jobParam -> runJobSafe(jobLauncher, userJob, jobParam));
   }
 
   private JobParameters toJobParameters(final MultipartFile csvFile) {
-    final String jobParamKey = csvFile.getName().contains(USER_CSV_FILENAME_PART)
-        ? FIRST_JOB_PARAM_KEY
-        : SECOND_JOB_PARAM_KEY;
     final JobParametersBuilder builder = new JobParametersBuilder();
-    builder.addJobParameter(jobParamKey, csvFile.getResource(), Resource.class);
+    builder.addJobParameter(USER_CSV_DATA_RESOURCE, csvFile.getResource(), Resource.class);
     return builder.toJobParameters();
   }
 }

@@ -1,6 +1,7 @@
 package com.andersen.filedatatransferagent.controller;
 
 import com.andersen.filedatatransferagent.facade.UserCsvDataTransferFacade;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class UserCsvDataTransferController {
 
   @PostMapping("/transfer")
   ResponseEntity<Void> transferUserCsvData(
-      @RequestBody @Size(min = 2, max = 2) final List<MultipartFile> csvData
+      @RequestBody @Valid @Size(min = 2, max = 2) final List<MultipartFile> csvData
   ) {
     userCsvDataTransferFacade.transferUserCsvData(csvData);
     return ResponseEntity.ok().build();

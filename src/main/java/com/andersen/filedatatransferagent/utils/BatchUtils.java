@@ -19,6 +19,7 @@ public class BatchUtils {
       jobLauncher.run(job, jobParameters);
     } catch (Throwable ex) {
       log.error(ex.getMessage(), ex);
+      throw new RuntimeException(ex);
     }
   }
 }

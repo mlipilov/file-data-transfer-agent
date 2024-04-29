@@ -1,6 +1,7 @@
 package com.andersen.filedatatransferagent.config;
 
 import static com.andersen.filedatatransferagent.constants.UserCsvConstants.HEADERS;
+import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ZERO;
 
 import com.andersen.filedatatransferagent.model.user.User;
@@ -13,6 +14,7 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
+import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.kafka.KafkaItemWriter;
 import org.springframework.batch.item.kafka.builder.KafkaItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,17 +32,23 @@ public class UserCsvDataTransferConfig {
   private static final String USER_READER_NAME = "userReader";
   private static final String USER_JOB_NAME = "transferCsvUserDataJob";
   private static final String USER_JOB_STEP_NAME = "transferCsvUserDataStep";
+  private static final String DELIMITER = ",";
 
   @Bean
   @StepScope
   public FlatFileItemReader<User> userReader(
-      @Value("#{jobParameters['url']}") Resource userCsvData
+      @Value("#{jobParameters['userCsvData']}") Resource userCsvData,
+      final FieldSetMapper<User> userFieldSetMapper
   ) {
     return new FlatFileItemReaderBuilder<User>()
         .name(USER_READER_NAME)
         .resource(userCsvData)
         .delimited()
+        .delimiter(DELIMITER)
         .names(HEADERS.toArray(new String[INTEGER_ZERO]))
+        .linesToSkip(INTEGER_ONE)
+        .fieldSetMapper(userFieldSetMapper)
+        .beanMapperStrict(false)
         .targetType(User.class)
         .build();
   }
