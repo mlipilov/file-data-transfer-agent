@@ -20,3 +20,9 @@ databaseChangeLog:
               - column:
                   name: operation_type
                   type: varchar(5)
+              - column:
+                  name: input
+                  type: text
+              - column:
+                  name: line_number
+                  type: bigint
