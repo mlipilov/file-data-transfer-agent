@@ -4,7 +4,7 @@ databaseChangeLog:
       id: 0.0.1-1 create user_csv_transfer_errors
       changes:
         - createTable:
-            tableName: user_csv-transfer_errors
+            tableName: user_csv_transfer_errors
             columns:
               - column:
                   name: id

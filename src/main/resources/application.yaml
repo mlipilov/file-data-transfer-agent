@@ -6,3 +6,4 @@ spring:
       - kafka
       - datasource
       - liquibase
+      - batch

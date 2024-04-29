@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+
+  #PostgreSQL
+  postgresql_file_data_transfer_agent:
+    container_name: postgresql_file_data_transfer_agent
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=file_transfer_agent
+      - POSTGRES_USER=local_user
+      - POSTGRES_PASSWORD=local_pass
+    ports:
+      - "6000:5432"
+    volumes:
+      - db_file_data_transfer_agent:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  #Zookeeper
+  zookeeper_file_data_transfer_agent:
+    container_name: zookeeper_file_data_transfer_agent
+    image: confluentinc/cp-zookeeper:latest
+    hostname: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    restart: always
+
+  #Kafka
+  kafka_file_data_transfer_agent:
+    container_name: kafka_file_data_transfer_agent
+    image: confluentinc/cp-kafka:latest
+    hostname: kafka
+    depends_on:
+      - zookeeper_file_data_transfer_agent
+    ports:
+      - '9092:9092'
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper_file_data_transfer_agent:2181'
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    restart: always
+
+#Volumes
+volumes:
+  db_file_data_transfer_agent:
+    driver: local

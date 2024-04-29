@@ -1,6 +1,6 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    username: root
-    password: root
-    url:
+    username: local_user
+    password: local_pass
+    url: jdbc:postgresql://localhost:6000/file_transfer_agent

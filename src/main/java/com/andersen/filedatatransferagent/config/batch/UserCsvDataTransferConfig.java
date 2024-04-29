@@ -20,6 +20,7 @@ import org.springframework.batch.item.kafka.builder.KafkaItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.io.Resource;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.transaction.KafkaTransactionManager;
@@ -54,9 +55,13 @@ public class UserCsvDataTransferConfig {
   }
 
   @Bean
-  public KafkaItemWriter<String, User> userWriter(final KafkaTemplate<String, User> kafkaTemplate) {
-    kafkaTemplate.setDefaultTopic("");
+  public KafkaItemWriter<String, User> userWriter(
+      final KafkaTemplate<String, User> kafkaTemplate,
+      final @Value("${spring.kafka.topics.user-csv-data-topic}") String topic
+  ) {
+    kafkaTemplate.setDefaultTopic(topic);
     return new KafkaItemWriterBuilder<String, User>()
+        .itemKeyMapper(source -> null)
         .kafkaTemplate(kafkaTemplate)
         .build();
   }
