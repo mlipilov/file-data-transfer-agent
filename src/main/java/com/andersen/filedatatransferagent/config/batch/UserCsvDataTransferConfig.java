@@ -55,6 +55,7 @@ public class UserCsvDataTransferConfig {
 
   @Bean
   public KafkaItemWriter<String, User> userWriter(final KafkaTemplate<String, User> kafkaTemplate) {
+    kafkaTemplate.setDefaultTopic("");
     return new KafkaItemWriterBuilder<String, User>()
         .kafkaTemplate(kafkaTemplate)
         .build();
@@ -65,11 +66,14 @@ public class UserCsvDataTransferConfig {
       final JobRepository jobRepository,
       final FlatFileItemReader<User> reader,
       final KafkaItemWriter<String, User> writer,
-      final KafkaTransactionManager<String, User> kafkaTransactionManager
+      final KafkaTransactionManager<String, User> kafkaTransactionManager,
+      final UserItemWriteListener userItemWriteListener,
+      final UseItemReadListener userItemReadListener
   ) {
-    //TODO implement read/write listeners
     return new StepBuilder(USER_JOB_STEP_NAME, jobRepository)
         .<User, User>chunk(CHUNK_SIZE, kafkaTransactionManager)
+        .listener(userItemWriteListener)
+        .listener(userItemReadListener)
         .reader(reader)
         .writer(writer)
         .build();

@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.kafka.core.KafkaProducerException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,7 @@ public class UserCsvWriteErrorCollectorImpl implements UserCsvWriteErrorCollecto
   @Override
   @Transactional
   public void collect(final Exception exception) {
+    //TODO check if this will be thrown KafkaProducerException
     final PreparedStatementCreator creator = conn -> getPreparedStatement(exception, conn);
     final PreparedStatementCallback<Boolean> callback = PreparedStatement::execute;
     jdbcTemplate.execute(creator, callback);
