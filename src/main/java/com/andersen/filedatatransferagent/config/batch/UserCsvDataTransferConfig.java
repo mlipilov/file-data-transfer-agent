@@ -1,4 +1,4 @@
-package com.andersen.filedatatransferagent.config;
+package com.andersen.filedatatransferagent.config.batch;
 
 import static com.andersen.filedatatransferagent.constants.UserCsvConstants.HEADERS;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;

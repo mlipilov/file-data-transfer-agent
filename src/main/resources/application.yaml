@@ -1,3 +1,8 @@
 spring:
   application:
     name: file-data-transfer-agent
+  profiles:
+    include:
+      - kafka
+      - datasource
+      - liquibase

@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      author: m.lipilov@andersenlab.com
+      id: 0.0.1-1 create user_csv_transfer_errors
+      changes:
+        - createTable:
+            tableName: user_csv-transfer_errors
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: occurred_at
+                  type: timestamp
+              - column:
+                  name: error_description
+                  type: text
+              - column:
+                  name: operation_type
+                  type: varchar(5)

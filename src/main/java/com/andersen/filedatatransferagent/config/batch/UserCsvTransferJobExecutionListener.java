@@ -1,4 +1,4 @@
-package com.andersen.filedatatransferagent.config;
+package com.andersen.filedatatransferagent.config.batch;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
