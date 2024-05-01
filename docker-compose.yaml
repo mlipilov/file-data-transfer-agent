@@ -2,6 +2,20 @@ version: '3.8'
 
 services:
 
+  #Application
+  file_data_transfer_agent:
+    container_name: file_data_transfer_agent
+    platform: linux/amd64
+    build:
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgresql_file_data_transfer_agent
+      - kafka_file_data_transfer_agent
+    restart: unless-stopped
   #PostgreSQL
   postgresql_file_data_transfer_agent:
     container_name: postgresql_file_data_transfer_agent
