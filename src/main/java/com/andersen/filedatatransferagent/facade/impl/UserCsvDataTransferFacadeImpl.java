@@ -3,7 +3,6 @@ package com.andersen.filedatatransferagent.facade.impl;
 import static com.andersen.filedatatransferagent.utils.BatchUtils.runJobSafe;
 
 import com.andersen.filedatatransferagent.facade.UserCsvDataTransferFacade;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -27,10 +26,9 @@ public class UserCsvDataTransferFacadeImpl implements UserCsvDataTransferFacade 
 
   @Async
   @Override
-  public void transferUserCsvData(final List<MultipartFile> csvData) {
-    csvData.stream()
-        .map(this::toJobParameters)
-        .forEach(jobParam -> runJobSafe(jobLauncher, userJob, jobParam));
+  public void transferUserCsvData(final MultipartFile csvData) {
+    JobParameters jobParameters = toJobParameters(csvData);
+    runJobSafe(jobLauncher, userJob, jobParameters);
   }
 
   private JobParameters toJobParameters(final MultipartFile csvFile) {
