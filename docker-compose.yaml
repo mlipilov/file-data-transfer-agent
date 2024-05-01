@@ -16,6 +16,7 @@ services:
       - postgresql_file_data_transfer_agent
       - kafka_file_data_transfer_agent
     restart: unless-stopped
+
   #PostgreSQL
   postgresql_file_data_transfer_agent:
     container_name: postgresql_file_data_transfer_agent
