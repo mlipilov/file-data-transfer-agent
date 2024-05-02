@@ -12,7 +12,7 @@ public class ConfiguredIntegrationTest extends BaseIntegrationTest {
   private static final String KAFKA_IMAGE = "confluentinc/cp-kafka:latest";
   private static final String POSTGRES_IMAGE = "postgres:latest";
 
-  private static final String DB_URL = "DATASOURCE_URL";
+  private static final String DB_URL = "DB_URL";
   private static final String DB_LOGIN = "DB_LOGIN";
   private static final String DB_PASS = "DB_PASS";
   private static final String KAFKA_SERVER_URL = "KAFKA_ADDRESS";

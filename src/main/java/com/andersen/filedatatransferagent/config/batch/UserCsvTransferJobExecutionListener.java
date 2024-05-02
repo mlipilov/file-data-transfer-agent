@@ -1,5 +1,9 @@
 package com.andersen.filedatatransferagent.config.batch;
 
+import static com.andersen.filedatatransferagent.constants.UserCsvConstants.FILE_NAME;
+import static com.andersen.filedatatransferagent.utils.FileUtils.delete;
+
+import java.nio.file.Paths;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobExecution;
@@ -18,5 +22,10 @@ public class UserCsvTransferJobExecutionListener implements JobExecutionListener
   @Override
   public void afterJob(@NonNull final JobExecution jobExecution) {
     log.info("Finished {} job", jobExecution.getJobInstance().getJobName());
+    final String path = (String) jobExecution.getJobParameters()
+        .getParameters()
+        .get(FILE_NAME)
+        .getValue();
+    delete(Paths.get(path));
   }
 }

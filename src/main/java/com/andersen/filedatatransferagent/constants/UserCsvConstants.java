@@ -30,4 +30,6 @@ public class UserCsvConstants {
       PHONE_NUMBER,
       EMAIL,
       WORKSPACES);
+
+  public static final String FILE_NAME = "users.csv";
 }

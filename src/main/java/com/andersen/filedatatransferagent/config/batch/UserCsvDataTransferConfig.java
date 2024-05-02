@@ -1,10 +1,16 @@
 package com.andersen.filedatatransferagent.config.batch;
 
 import static com.andersen.filedatatransferagent.constants.UserCsvConstants.HEADERS;
+import static com.andersen.filedatatransferagent.utils.FileUtils.readFileBytes;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ZERO;
 
 import com.andersen.filedatatransferagent.model.user.User;
+import com.andersen.filedatatransferagent.utils.FileUtils;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
@@ -20,8 +26,7 @@ import org.springframework.batch.item.kafka.builder.KafkaItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.transaction.KafkaTransactionManager;
 
@@ -38,14 +43,15 @@ public class UserCsvDataTransferConfig {
   @Bean
   @StepScope
   public FlatFileItemReader<User> userReader(
-      @Value("#{jobParameters['userCsvData']}") Resource userCsvData,
+      @Value("#{jobParameters['users.csv']}") final String userCsvData,
       final FieldSetMapper<User> userFieldSetMapper
   ) {
     return new FlatFileItemReaderBuilder<User>()
         .name(USER_READER_NAME)
-        .resource(userCsvData)
+        .resource(new ByteArrayResource(readFileBytes(Paths.get(userCsvData))))
         .delimited()
         .delimiter(DELIMITER)
+        .quoteCharacter('"')
         .names(HEADERS.toArray(new String[INTEGER_ZERO]))
         .linesToSkip(INTEGER_ONE)
         .fieldSetMapper(userFieldSetMapper)
@@ -75,6 +81,8 @@ public class UserCsvDataTransferConfig {
       final UserItemWriteListener userItemWriteListener,
       final UseItemReadListener userItemReadListener
   ) {
+    kafkaTransactionManager.setTransactionSynchronizationName("SYNCHRONIZATION_ALWAYS");
+
     return new StepBuilder(USER_JOB_STEP_NAME, jobRepository)
         .<User, User>chunk(CHUNK_SIZE, kafkaTransactionManager)
         .listener(userItemWriteListener)
