@@ -1,5 +1,7 @@
 package com.andersen.filedatatransferagent.controller;
 
+import static java.util.concurrent.CompletableFuture.runAsync;
+
 import com.andersen.filedatatransferagent.facade.UserCsvDataTransferFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +19,10 @@ public class UserCsvDataTransferController {
   private final UserCsvDataTransferFacade userCsvDataTransferFacade;
 
   @PostMapping("/transfer")
-  ResponseEntity<Void> transferUserCsvData(@RequestPart(name = "users.csv") final MultipartFile csvData) {
-    userCsvDataTransferFacade.transferUserCsvData(csvData);
+  ResponseEntity<Void> transferUserCsvData(
+      @RequestPart(name = "users.csv") final MultipartFile csvData
+  ) {
+    runAsync(() -> userCsvDataTransferFacade.transferUserCsvData(csvData));
     return ResponseEntity.ok().build();
   }
 }
