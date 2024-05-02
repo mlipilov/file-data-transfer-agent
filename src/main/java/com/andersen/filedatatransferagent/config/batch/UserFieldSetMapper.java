@@ -31,7 +31,6 @@ public class UserFieldSetMapper implements FieldSetMapper<User> {
 
   @Override
   public @NonNull User mapFieldSet(final @NonNull FieldSet fieldSet) {
-    log.info("Started to map user field set...");
     final List<Workspace> workspaces = getWorkspaces(fieldSet);
 
     return new User(

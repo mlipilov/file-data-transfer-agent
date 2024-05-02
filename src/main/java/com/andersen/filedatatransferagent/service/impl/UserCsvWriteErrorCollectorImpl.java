@@ -36,7 +36,6 @@ public class UserCsvWriteErrorCollectorImpl implements UserCsvWriteErrorCollecto
   @Override
   @Transactional
   public void collect(final Exception exception) {
-    //TODO check if this will be thrown KafkaProducerException
     final PreparedStatementCreator creator = conn -> getPreparedStatement(exception, conn);
     final PreparedStatementCallback<Boolean> callback = PreparedStatement::execute;
     jdbcTemplate.execute(creator, callback);

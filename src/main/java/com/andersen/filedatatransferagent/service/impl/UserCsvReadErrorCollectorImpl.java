@@ -29,7 +29,8 @@ public class UserCsvReadErrorCollectorImpl implements UserCsvReadErrorCollector 
 
   private static final String SAVE_ERR_SQL = """
       insert into
-      user_csv_transfer_errors('occurred_at', 'error_description', 'operation-type', 'input', 'line_number')
+      user_csv_transfer_errors('occurred_at', 'error_description',
+                               'operation-type', 'input', 'line_number')
       values (?, ?, ?, ?, ?)
       """;
 

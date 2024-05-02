@@ -17,8 +17,6 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
-import org.springframework.batch.item.file.mapping.FieldSetMapper;
-import org.springframework.batch.item.file.transform.LineTokenizer;
 import org.springframework.batch.item.kafka.KafkaItemWriter;
 import org.springframework.batch.item.kafka.builder.KafkaItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,15 +34,14 @@ public class UserCsvDataTransferConfig {
   private static final String USER_READER_NAME = "userReader";
   private static final String USER_JOB_NAME = "transferCsvUserDataJob";
   private static final String USER_JOB_STEP_NAME = "transferCsvUserDataStep";
+  public static final String SYNCHRONIZATION_ALWAYS = "SYNCHRONIZATION_ALWAYS";
   private static final String DELIMITER = ",";
 
   @Bean
   @StepScope
   public FlatFileItemReader<User> userReader(
       @Value("#{jobParameters['users.csv']}") final String userCsvData,
-      final FieldSetMapper<User> userFieldSetMapper,
-      final LineMapper<User> userLineMapper,
-      final LineTokenizer userLineTokenizer
+      final LineMapper<User> userLineMapper
   ) {
     return new FlatFileItemReaderBuilder<User>()
         .name(USER_READER_NAME)
@@ -80,8 +77,7 @@ public class UserCsvDataTransferConfig {
       final UserItemWriteListener userItemWriteListener,
       final UseItemReadListener userItemReadListener
   ) {
-    kafkaTransactionManager.setTransactionSynchronizationName("SYNCHRONIZATION_ALWAYS");
-
+    kafkaTransactionManager.setTransactionSynchronizationName(SYNCHRONIZATION_ALWAYS);
     return new StepBuilder(USER_JOB_STEP_NAME, jobRepository)
         .<User, User>chunk(CHUNK_SIZE, kafkaTransactionManager)
         .listener(userItemWriteListener)
