@@ -6,10 +6,6 @@ import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ZERO;
 
 import com.andersen.filedatatransferagent.model.user.User;
-import com.andersen.filedatatransferagent.utils.FileUtils;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
@@ -19,8 +15,10 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
+import org.springframework.batch.item.file.transform.LineTokenizer;
 import org.springframework.batch.item.kafka.KafkaItemWriter;
 import org.springframework.batch.item.kafka.builder.KafkaItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,19 +42,20 @@ public class UserCsvDataTransferConfig {
   @StepScope
   public FlatFileItemReader<User> userReader(
       @Value("#{jobParameters['users.csv']}") final String userCsvData,
-      final FieldSetMapper<User> userFieldSetMapper
+      final FieldSetMapper<User> userFieldSetMapper,
+      final LineMapper<User> userLineMapper,
+      final LineTokenizer userLineTokenizer
   ) {
     return new FlatFileItemReaderBuilder<User>()
         .name(USER_READER_NAME)
+        .beanMapperStrict(false)
+        .targetType(User.class)
+        .linesToSkip(INTEGER_ONE)
+        .lineMapper(userLineMapper)
         .resource(new ByteArrayResource(readFileBytes(Paths.get(userCsvData))))
         .delimited()
         .delimiter(DELIMITER)
-        .quoteCharacter('"')
         .names(HEADERS.toArray(new String[INTEGER_ZERO]))
-        .linesToSkip(INTEGER_ONE)
-        .fieldSetMapper(userFieldSetMapper)
-        .beanMapperStrict(false)
-        .targetType(User.class)
         .build();
   }
 
