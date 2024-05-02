@@ -9,14 +9,12 @@ import static com.andersen.filedatatransferagent.constants.UserCsvConstants.PHON
 import static com.andersen.filedatatransferagent.constants.UserCsvConstants.STATE_INDEX;
 import static com.andersen.filedatatransferagent.constants.UserCsvConstants.STREET_INDEX;
 import static com.andersen.filedatatransferagent.constants.UserCsvConstants.USERNAME_INDEX;
-import static com.andersen.filedatatransferagent.constants.UserCsvConstants.WORKSPACES;
 import static com.andersen.filedatatransferagent.constants.UserCsvConstants.WORKSPACES_INDEX;
 import static com.andersen.filedatatransferagent.constants.UserCsvConstants.ZIP_INDEX;
 import static com.andersen.filedatatransferagent.utils.JsonUtils.deserialize;
 
 import com.andersen.filedatatransferagent.model.user.User;
 import com.andersen.filedatatransferagent.model.workspace.Workspace;
-import com.andersen.filedatatransferagent.utils.JsonUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.List;
 import lombok.NonNull;
