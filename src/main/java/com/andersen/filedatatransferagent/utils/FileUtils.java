@@ -45,7 +45,7 @@ public class FileUtils {
     }
   }
 
-  public void delete(final Path path) {
+  public static void delete(final Path path) {
     try {
       Files.deleteIfExists(path);
     } catch (IOException e) {
