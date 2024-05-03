@@ -25,6 +25,7 @@ public class UserCsvDataTransferFacadeImpl implements UserCsvDataTransferFacade 
 
   @Override
   public void transferUserCsvData(final MultipartFile csvData) {
+    log.info("Started transferring user csv data");
     final Path tmpFile = createTmpFile();
     transferResourceData(csvData, tmpFile);
     final JobParameters jobParameters = toJobParameters(csvData, tmpFile);

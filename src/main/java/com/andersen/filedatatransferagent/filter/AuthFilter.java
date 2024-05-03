@@ -24,7 +24,7 @@ public class AuthFilter implements Filter {
       final FilterChain filterChain
   ) throws ServletException, IOException {
     final String remoteHost = servletRequest.getRemoteAddr();
-    //Need to be done using VPC or firewall on the cloud provider side
+    //FIXME Need to be done using VPC or firewall on the cloud provider side
     if (remoteHost.equals(ALLOWED_IP)) {
       filterChain.doFilter(servletRequest, servletResponse);
     } else {

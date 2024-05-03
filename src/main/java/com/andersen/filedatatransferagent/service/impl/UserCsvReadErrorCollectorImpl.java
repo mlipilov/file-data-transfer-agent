@@ -40,6 +40,7 @@ public class UserCsvReadErrorCollectorImpl implements UserCsvReadErrorCollector 
   @Transactional
   public void collect(final Exception ex) {
     if (ex.getCause() instanceof FlatFileParseException flatFileEx) {
+      log.info("Started collecting read error...");
       final PreparedStatementCreator creator = conn -> getPreparedStatement(flatFileEx, conn);
       final PreparedStatementCallback<Boolean> callback = PreparedStatement::execute;
       jdbcTemplate.execute(creator, callback);

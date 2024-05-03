@@ -35,6 +35,7 @@ public class UserCsvWriteErrorCollectorImpl implements UserCsvWriteErrorCollecto
   @Override
   @Transactional
   public void collect(final Exception exception) {
+    log.info("Started collecting write error...");
     final PreparedStatementCreator creator = conn -> getPreparedStatement(exception, conn);
     final PreparedStatementCallback<Boolean> callback = PreparedStatement::execute;
     jdbcTemplate.execute(creator, callback);
