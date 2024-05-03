@@ -7,6 +7,7 @@ import static java.util.concurrent.CompletableFuture.runAsync;
 
 import com.andersen.filedatatransferagent.facade.UserCsvDataTransferFacade;
 import java.nio.file.Path;
+import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -30,12 +31,19 @@ public class UserCsvDataTransferFacadeImpl implements UserCsvDataTransferFacade 
     final Path tmpFile = createTmpFile();
     copy(csvData, tmpFile);
     final JobParameters jobParameters = toJobParameters(csvData, tmpFile);
-    runAsync(() -> runJobSafe(jobLauncher, userJob, jobParameters));
+    runAsync(() -> runJobSafe(jobLauncher, userJob, jobParameters)).exceptionally(logEx());
   }
 
   private JobParameters toJobParameters(final MultipartFile csvFile, final Path tmpFile) {
     final JobParametersBuilder builder = new JobParametersBuilder();
     builder.addJobParameter(csvFile.getName(), tmpFile.toUri().getPath(), String.class);
     return builder.toJobParameters();
+  }
+
+  private Function<Throwable, Void> logEx() {
+    return err -> {
+      log.error(err.getMessage(), err);
+      return null;
+    };
   }
 }
