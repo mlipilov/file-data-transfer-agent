@@ -1,8 +1,9 @@
 package com.andersen.filedatatransferagent.facade.impl;
 
 import static com.andersen.filedatatransferagent.utils.BatchUtils.runJobSafe;
+import static com.andersen.filedatatransferagent.utils.FileUtils.copy;
 import static com.andersen.filedatatransferagent.utils.FileUtils.createTmpFile;
-import static com.andersen.filedatatransferagent.utils.FileUtils.transferResourceData;
+import static java.util.concurrent.CompletableFuture.runAsync;
 
 import com.andersen.filedatatransferagent.facade.UserCsvDataTransferFacade;
 import java.nio.file.Path;
@@ -27,9 +28,9 @@ public class UserCsvDataTransferFacadeImpl implements UserCsvDataTransferFacade 
   public void transferUserCsvData(final MultipartFile csvData) {
     log.info("Started transferring user csv data");
     final Path tmpFile = createTmpFile();
-    transferResourceData(csvData, tmpFile);
+    copy(csvData, tmpFile);
     final JobParameters jobParameters = toJobParameters(csvData, tmpFile);
-    runJobSafe(jobLauncher, userJob, jobParameters);
+    runAsync(() -> runJobSafe(jobLauncher, userJob, jobParameters));
   }
 
   private JobParameters toJobParameters(final MultipartFile csvFile, final Path tmpFile) {

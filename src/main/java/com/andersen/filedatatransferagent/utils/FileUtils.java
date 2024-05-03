@@ -1,6 +1,7 @@
 package com.andersen.filedatatransferagent.utils;
 
 import static java.nio.file.Files.createTempFile;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.io.IOException;
@@ -24,12 +25,12 @@ public class FileUtils {
     }
   }
 
-  public static void transferResourceData(
+  public static void copy(
       final MultipartFile multipartFile,
       final Path transferTo
   ) {
     try {
-      multipartFile.transferTo(transferTo);
+      Files.copy(multipartFile.getInputStream(), transferTo, REPLACE_EXISTING);
     } catch (IOException e) {
       log.error(e.getMessage(), e);
       throw new RuntimeException(e);
