@@ -1,6 +1,6 @@
 package com.andersen.filedatatransferagent.service.impl;
 
-import static com.andersen.filedatatransferagent.model.OperationType.READ;
+import static com.andersen.filedatatransferagent.model.OperationType.WRITE;
 
 import com.andersen.filedatatransferagent.service.UserCsvWriteErrorCollector;
 import java.sql.Connection;
@@ -26,7 +26,7 @@ public class UserCsvWriteErrorCollectorImpl implements UserCsvWriteErrorCollecto
 
   private static final String SAVE_ERR_SQL = """
       insert into
-      user_csv_transfer_errors('occurred_at', 'error_description', 'operation-type')
+      user_csv_transfer_errors(occurred_at, error_description, operation_type)
       values (?, ?, ?)
       """;
 
@@ -47,7 +47,7 @@ public class UserCsvWriteErrorCollectorImpl implements UserCsvWriteErrorCollecto
     final PreparedStatement preparedStatement = psc.prepareStatement(SAVE_ERR_SQL);
     preparedStatement.setTimestamp(TIMESTAMP_INDEX, new Timestamp(System.currentTimeMillis()));
     preparedStatement.setString(ERR_MSG_INDEX, exception.getMessage());
-    preparedStatement.setString(OPERATION_INDEX, READ.name());
+    preparedStatement.setString(OPERATION_INDEX, WRITE.name());
     return preparedStatement;
   }
 }
