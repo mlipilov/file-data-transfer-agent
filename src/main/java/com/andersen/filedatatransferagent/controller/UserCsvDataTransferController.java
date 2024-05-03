@@ -19,7 +19,7 @@ public class UserCsvDataTransferController {
   private final UserCsvDataTransferFacade userCsvDataTransferFacade;
 
   @PostMapping("/transfer")
-  ResponseEntity<Void> transferUserCsvData(
+  public ResponseEntity<Void> transferUserCsvData(
       @RequestPart(name = "users.csv") final MultipartFile csvData
   ) {
     runAsync(() -> userCsvDataTransferFacade.transferUserCsvData(csvData));

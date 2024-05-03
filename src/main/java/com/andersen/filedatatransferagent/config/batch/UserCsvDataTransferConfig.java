@@ -34,7 +34,7 @@ public class UserCsvDataTransferConfig {
   private static final String USER_READER_NAME = "userReader";
   private static final String USER_JOB_NAME = "transferCsvUserDataJob";
   private static final String USER_JOB_STEP_NAME = "transferCsvUserDataStep";
-  public static final String SYNCHRONIZATION_ALWAYS = "SYNCHRONIZATION_ALWAYS";
+  private static final String SYNCHRONIZATION_ALWAYS = "SYNCHRONIZATION_ALWAYS";
   private static final String DELIMITER = ",";
 
   @Bean
