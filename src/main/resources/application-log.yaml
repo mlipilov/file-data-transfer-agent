@@ -1,0 +1,13 @@
+logging:
+  level:
+    org:
+      springframework:
+        beans: error
+        context: error
+        kafka: error
+      apache:
+        kafka: error
+    com:
+      zaxxer:
+        hikari: error
+    liquibase: error
