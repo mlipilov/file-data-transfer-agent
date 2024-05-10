@@ -31,8 +31,13 @@ class UserCsvDataTransferFacadeImplTest {
   @Test
   @SneakyThrows
   void givenFile_whenLaunchJob_ThenSuccessfullyLaunchJob() {
+    //GIVEN
     final MultipartFile multipartFile = new MockMultipartFile("file", "hello".getBytes());
+
+    //WHEN
     userCsvDataTransferFacade.transferUserCsvData(multipartFile);
+
+    //THEN
     verify(jobLauncher, times(INTEGER_ONE)).run(eq(userJob), any(JobParameters.class));
   }
 }

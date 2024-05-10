@@ -2,6 +2,7 @@ package com.andersen.filedatatransferagent.config.batch;
 
 import static com.andersen.filedatatransferagent.constants.UserCsvConstants.HEADERS;
 import static com.andersen.filedatatransferagent.utils.FileUtils.readFileBytes;
+import static java.lang.System.currentTimeMillis;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ZERO;
 
@@ -93,7 +94,8 @@ public class UserCsvDataTransferConfig {
       final JobExecutionListener userJobListener,
       final Step userJobStep
   ) {
-    return new JobBuilder(USER_JOB_NAME, jobRepository)
+    final String jobName = USER_JOB_NAME.concat(DELIMITER) + currentTimeMillis();
+    return new JobBuilder(jobName, jobRepository)
         .listener(userJobListener)
         .start(userJobStep)
         .build();
