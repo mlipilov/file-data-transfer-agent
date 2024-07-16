@@ -6,6 +6,7 @@ import static com.andersen.filedatatransferagent.utils.FileUtils.createTmpFile;
 import static java.util.concurrent.CompletableFuture.runAsync;
 
 import com.andersen.filedatatransferagent.facade.UserCsvDataTransferFacade;
+import com.andersen.filedatatransferagent.validator.UserCsvDataValidator;
 import java.nio.file.Path;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class UserCsvDataTransferFacadeImpl implements UserCsvDataTransferFacade {
 
+  private final UserCsvDataValidator userCsvDataValidator;
   private final JobLauncher jobLauncher;
   private final Job userJob;
 
@@ -31,6 +33,7 @@ public class UserCsvDataTransferFacadeImpl implements UserCsvDataTransferFacade 
     log.info("Started transferring user csv data");
     final Path tmpFile = createTmpFile();
     copy(csvData, tmpFile);
+    userCsvDataValidator.validate(tmpFile);
     final JobParameters jobParameters = toJobParameters(csvData, tmpFile);
     runAsync(() -> runJobSafe(jobLauncher, userJob, jobParameters))
         .exceptionally(logEx())
