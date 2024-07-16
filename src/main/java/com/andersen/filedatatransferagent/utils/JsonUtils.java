@@ -9,6 +9,9 @@ import java.util.List;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * This class provides utility methods for working with JSON data.
+ */
 @Slf4j
 @UtilityClass
 public class JsonUtils {
@@ -17,6 +20,15 @@ public class JsonUtils {
   public static final String UNNECESSARY_QUOTES_REGEXP_2 = "\"\"";
   public static final String SINGLE_QUOT = "\"";
 
+  /**
+   * Deserializes a JSON string into a list of objects of the specified type.
+   *
+   * @param typeReference The type reference specifying the target object type.
+   * @param json The JSON string to be deserialized.
+   * @param <T> The type of objects in the list to be deserialized.
+   * @return The deserialized list of objects.
+   * @throws RuntimeException if there is an error during deserialization.
+   */
   public static <T> List<T> deserialize(
       final TypeReference<List<T>> typeReference,
       final String json

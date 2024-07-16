@@ -7,6 +7,7 @@ import static java.util.concurrent.CompletableFuture.runAsync;
 
 import com.andersen.filedatatransferagent.facade.UserCsvDataTransferFacade;
 import java.nio.file.Path;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,9 @@ public class UserCsvDataTransferFacadeImpl implements UserCsvDataTransferFacade 
     final Path tmpFile = createTmpFile();
     copy(csvData, tmpFile);
     final JobParameters jobParameters = toJobParameters(csvData, tmpFile);
-    runAsync(() -> runJobSafe(jobLauncher, userJob, jobParameters)).exceptionally(logEx());
+    runAsync(() -> runJobSafe(jobLauncher, userJob, jobParameters))
+        .exceptionally(logEx())
+        .whenComplete(logJobIsFinished());
   }
 
   private JobParameters toJobParameters(final MultipartFile csvFile, final Path tmpFile) {
@@ -45,5 +48,9 @@ public class UserCsvDataTransferFacadeImpl implements UserCsvDataTransferFacade 
       log.error(err.getMessage(), err);
       return null;
     };
+  }
+
+  private BiConsumer<? super Void, ? super Throwable> logJobIsFinished() {
+    return (res, ex) -> log.info("Finished transferring user csv data");
   }
 }

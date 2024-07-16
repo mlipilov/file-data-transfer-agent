@@ -3,6 +3,9 @@ package com.andersen.filedatatransferagent.constants;
 import java.util.List;
 import lombok.experimental.UtilityClass;
 
+/**
+ * The UserCsvConstants class provides constants related to the CSV file structure for user data.
+ */
 @UtilityClass
 public class UserCsvConstants {
 

@@ -15,6 +15,11 @@ public class UseItemReadListener implements ItemReadListener<User> {
 
   private final UserCsvReadErrorCollector userCsvReadErrorCollector;
 
+  /**
+   * This method is called when an error occurs during reading of an item.
+   *
+   * @param ex the exception that occurred during the read operation
+   */
   @Override
   public void onReadError(@NonNull final Exception ex) {
     log.error(ex.getMessage(), ex);

@@ -9,12 +9,21 @@ import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.batch.item.file.transform.LineTokenizer;
 import org.springframework.stereotype.Component;
 
+/**
+ * The UserLineTokenizer class is responsible for tokenizing a line of user data into fields.
+ */
 @Component
 public class UserLineTokenizer implements LineTokenizer {
 
   public static final String JSON_INDEX = "\"[{";
   public static final String COMA_REGEX = ",";
 
+  /**
+   * Tokenizes a given line into a FieldSet.
+   *
+   * @param line the line to be tokenized
+   * @return the FieldSet containing the tokens
+   */
   @Override
   public @NonNull FieldSet tokenize(final String line) {
     if (line == null) {

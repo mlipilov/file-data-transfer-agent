@@ -9,6 +9,10 @@ import org.springframework.batch.core.ItemWriteListener;
 import org.springframework.batch.item.Chunk;
 import org.springframework.stereotype.Component;
 
+/**
+ * UserItemWriteListener is an implementation of the ItemWriteListener interface
+ * for handling write errors during the writing of User items.
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor

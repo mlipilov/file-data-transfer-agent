@@ -27,6 +27,10 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.transaction.KafkaTransactionManager;
 
+/**
+ * UserCsvDataTransferConfig is a configuration class that sets up the necessary beans
+ * for transferring user data from a CSV file to a Kafka topic.
+ */
 @Configuration
 public class UserCsvDataTransferConfig {
 
@@ -38,6 +42,13 @@ public class UserCsvDataTransferConfig {
   private static final String SYNCHRONIZATION_ALWAYS = "SYNCHRONIZATION_ALWAYS";
   private static final String DELIMITER = ",";
 
+  /**
+   * The userReader method is a factory method that creates a FlatFileItemReader for reading User objects from a CSV file.
+   *
+   * @param userCsvData The path to the CSV file containing the user data. It is retrieved from the job parameters.
+   * @param userLineMapper The LineMapper implementation used to map each line of the CSV file to a User object.
+   * @return A FlatFileItemReader for reading User objects from the CSV file.
+   */
   @Bean
   @StepScope
   public FlatFileItemReader<User> userReader(
@@ -57,6 +68,13 @@ public class UserCsvDataTransferConfig {
         .build();
   }
 
+  /**
+   * Returns a KafkaItemWriter instance for writing User objects to a Kafka topic.
+   *
+   * @param kafkaTemplate The instance of KafkaTemplate to use for writing to Kafka.
+   * @param topic The topic name to which the User objects will be written.
+   * @return A KafkaItemWriter instance.
+   */
   @Bean
   public KafkaItemWriter<String, User> userWriter(
       final KafkaTemplate<String, User> kafkaTemplate,
@@ -69,6 +87,17 @@ public class UserCsvDataTransferConfig {
         .build();
   }
 
+  /**
+   * Generates a Step object for the user job.
+   *
+   * @param jobRepository            The JobRepository to use for the step.
+   * @param reader                   The FlatFileItemReader to use for reading User objects from a CSV file.
+   * @param writer                   The KafkaItemWriter to use for writing User objects to a Kafka topic.
+   * @param kafkaTransactionManager  The KafkaTransactionManager to use for transactional writing.
+   * @param userItemWriteListener    The UserItemWriteListener to use for handling write errors during writing.
+   * @param userItemReadListener     The UseItemReadListener to use for handling read errors during reading.
+   * @return A Step object for the user job.
+   */
   @Bean
   public Step userJobStep(
       final JobRepository jobRepository,
@@ -88,6 +117,14 @@ public class UserCsvDataTransferConfig {
         .build();
   }
 
+  /**
+   * Creates a Job object for the user job.
+   *
+   * @param jobRepository The JobRepository to use for the job.
+   * @param userJobListener The JobExecutionListener to use for the job.
+   * @param userJobStep The Step to execute as part of the job.
+   * @return A Job object for the user job.
+   */
   @Bean
   public Job userJob(
       final JobRepository jobRepository,

@@ -12,10 +12,19 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * This class provides utility methods for file operations.
+ */
 @Slf4j
 @UtilityClass
 public class FileUtils {
 
+  /**
+   * Creates a temporary file with a randomly generated UUID as the file name.
+   *
+   * @return the path to the created temporary file
+   * @throws RuntimeException if an I/O error occurs while creating the temporary file
+   */
   public static Path createTmpFile() {
     try {
       return createTempFile(UUID.randomUUID().toString(), EMPTY);
@@ -25,6 +34,13 @@ public class FileUtils {
     }
   }
 
+  /**
+   * Copies the contents of a MultipartFile to a specified Path.
+   *
+   * @param multipartFile The MultipartFile to copy from
+   * @param transferTo The Path to copy the file to
+   * @throws RuntimeException if an I/O error occurs while copying the file
+   */
   public static void copy(
       final MultipartFile multipartFile,
       final Path transferTo
@@ -37,6 +53,13 @@ public class FileUtils {
     }
   }
 
+  /**
+   * Reads all bytes from the specified file.
+   *
+   * @param path The file path to read from.
+   * @return An array of bytes containing the contents of the file.
+   * @throws RuntimeException If an I/O error occurs while reading the file.
+   */
   public static byte[] readFileBytes(final Path path) {
     try {
       return Files.readAllBytes(path);
@@ -46,6 +69,12 @@ public class FileUtils {
     }
   }
 
+  /**
+   * Deletes a file at the specified path.
+   *
+   * @param path The path of the file to be deleted.
+   * @throws RuntimeException If an I/O error occurs while deleting the file.
+   */
   public static void delete(final Path path) {
     try {
       Files.deleteIfExists(path);

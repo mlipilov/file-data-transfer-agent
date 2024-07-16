@@ -23,12 +23,22 @@ import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.stereotype.Component;
 
+/**
+ * The UserFieldSetMapper class is responsible for mapping a FieldSet to a User object.
+ */
 @Slf4j
 @Component
 public class UserFieldSetMapper implements FieldSetMapper<User> {
 
+  /**
+   * Maps a {@link FieldSet} to a {@link User} object.
+   *
+   * @param fieldSet the field set to be mapped
+   * @return the mapped {@link User} object
+   */
   @Override
   public @NonNull User mapFieldSet(final @NonNull FieldSet fieldSet) {
+    log.info("Started creating User object from the FieldSet");
     final List<Workspace> workspaces = getWorkspaces(fieldSet);
 
     return new User(

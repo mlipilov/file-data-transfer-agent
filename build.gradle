@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.2.5'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'io.freefair.lombok' version '8.6'
+    id 'jacoco'
 }
 
 group = 'com.andersen'
@@ -14,6 +15,29 @@ java {
 
 jar {
     enabled = false
+}
+
+test {
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, exclude: [
+                            'com/andersen/filedatatransferagent/utils/**',
+                            'com/andersen/filedatatransferagent/config/**',
+                            'com/andersen/filedatatransferagent/filter/**',
+                            'com/andersen/filedatatransferagent/constants/**',
+                            'com/andersen/filedatatransferagent/model/**',
+                            'com/andersen/filedatatransferagent/FileDataTransferAgentApplication.class'
+                    ])
+                })
+        )
+    }
 }
 
 bootJar {
