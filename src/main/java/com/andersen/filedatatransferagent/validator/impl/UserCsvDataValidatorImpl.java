@@ -4,6 +4,8 @@ import static com.andersen.filedatatransferagent.constants.UserCsvConstants.AGE;
 import static com.andersen.filedatatransferagent.constants.UserCsvConstants.EMAIL;
 import static com.andersen.filedatatransferagent.constants.UserCsvConstants.HEADERS;
 import static com.andersen.filedatatransferagent.constants.UserCsvConstants.USERNAME;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static org.apache.commons.csv.CSVFormat.DEFAULT;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ZERO;
 
@@ -14,8 +16,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Service;
@@ -26,13 +28,19 @@ public class UserCsvDataValidatorImpl implements UserCsvDataValidator {
 
   private static final int MAX_AGE = 120;
   private static final String EMAIL_SYMBOL = "@";
+  private static final char DELIMITER = ',';
 
   @Override
   public void validate(final Path userCsvData) {
     Reader reader = null;
     try {
       reader = new FileReader(userCsvData.toFile());
-      final CSVParser csvParser = new CSVParser(reader, DEFAULT);
+      final CSVFormat csvFormat = DEFAULT.builder()
+          .setDelimiter(DELIMITER)
+          .setHeader()
+          .setSkipHeaderRecord(true)
+          .build();
+      final CSVParser csvParser = new CSVParser(reader, csvFormat);
 
       final List<String> headers = csvParser.getHeaderNames();
       for (final String header : headers) {
@@ -46,13 +54,13 @@ public class UserCsvDataValidatorImpl implements UserCsvDataValidator {
         final String age = record.get(AGE);
         final String email = record.get(EMAIL);
 
-        if (username == null || username.isEmpty()) {
+        if (isNull(username) || username.isEmpty()) {
           throw new BadRequestException("Invalid Name: " + username);
         }
-        if (isValidAge(age)) {
+        if (!isValidAge(age)) {
           throw new BadRequestException("Invalid Age: " + age);
         }
-        if (isValidEmail(email)) {
+        if (!isValidEmail(email)) {
           throw new BadRequestException("Invalid Email: " + email);
         }
       }
@@ -68,7 +76,7 @@ public class UserCsvDataValidatorImpl implements UserCsvDataValidator {
 
   private void closeReader(final Reader reader) {
     try {
-      if (Objects.nonNull(reader)) {
+      if (nonNull(reader)) {
         reader.close();
       }
     } catch (IOException e) {
@@ -87,6 +95,6 @@ public class UserCsvDataValidatorImpl implements UserCsvDataValidator {
   }
 
   private boolean isValidEmail(final String email) {
-    return email != null && email.contains(EMAIL_SYMBOL);
+    return nonNull(email) && email.contains(EMAIL_SYMBOL);
   }
 }

@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.andersen.filedatatransferagent.validator.UserCsvDataValidator;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 @ExtendWith(MockitoExtension.class)
 class UserCsvDataTransferFacadeImplTest {
 
+  @Mock
+  private UserCsvDataValidator validator;
   @Mock
   private JobLauncher jobLauncher;
   @Mock
