@@ -1,7 +1,8 @@
 package com.andersen.filedatatransferagent.controller;
 
+import static com.andersen.filedatatransferagent.utils.KafkaUtils.getConsumerProperties;
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Objects.requireNonNull;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,9 +10,18 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
 
 import com.andersen.filedatatransferagent.ConfiguredIntegrationTest;
+import com.andersen.filedatatransferagent.model.user.User;
+import java.time.Duration;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import lombok.SneakyThrows;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.PreparedStatementSetter;
@@ -30,16 +40,26 @@ class UserCsvDataTransferControllerIT extends ConfiguredIntegrationTest {
       + "from batch_job_execution "
       + "where job_execution_id = ?";
   private static final String TRIGGER_PATH = "api/v1/users/csv/transfer";
-  public static final String COMPLETED = "COMPLETED";
+  private static final String COMPLETED = "COMPLETED";
 
-  public static final long TIMEOUT = 5L;
+  private static final long TIMEOUT = 5L;
+  private static final String USER_CSV_DATA_TOPIC = "user-csv-data";
+  private static final String EXPECTED_NAME = "John";
+  private static final String EXPECTED_L_NAME = "Doe";
+  private static final String EXPECTED_MAIL = "john@example.com";
 
   @Value("classpath:users.csv")
   private Resource usersCsvResource;
+  @Autowired
+  private KafkaProperties kafkaProperties;
 
   @Test
   @SneakyThrows
   void givenCsvData_whenTriggerTransfer_ThenBatchTaskExecutedSuccessfully() {
+    final var consumerProperties = getConsumerProperties(kafkaProperties);
+    final KafkaConsumer<String, User> consumer = new KafkaConsumer<>(consumerProperties);
+    consumer.subscribe(List.of(USER_CSV_DATA_TOPIC));
+
     //GIVEN
     final String filename = requireNonNull(usersCsvResource.getFilename());
     final MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
@@ -55,7 +75,15 @@ class UserCsvDataTransferControllerIT extends ConfiguredIntegrationTest {
 
     //THEN
     assertEquals(OK, rs.toEntity(Void.class).getStatusCode());
-    await().atMost(TIMEOUT, SECONDS).until(this::jobIsCompleted);
+    await().atMost(TIMEOUT, TimeUnit.SECONDS).until(this::jobIsCompleted);
+
+    final ConsumerRecords<String, User> records = consumer.poll(Duration.of(10, SECONDS));
+    final ConsumerRecord<String, User> record = records.iterator().next();
+    assertEquals(EXPECTED_NAME, record.value().getFirstName());
+    assertEquals(EXPECTED_L_NAME, record.value().getLastName());
+    assertEquals(EXPECTED_MAIL, record.value().getEmail());
+    //todo add more assertions if needed
+    consumer.close();
   }
 
   private boolean jobIsCompleted() {
