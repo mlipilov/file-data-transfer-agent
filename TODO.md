@@ -1,1 +1,0 @@
-# Added 'publish image to the dockerhub' feature

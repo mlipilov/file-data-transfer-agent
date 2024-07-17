@@ -59,15 +59,10 @@ API and request example can be found on swagger [click](http://localhost:8080/sw
 We use open source solution called Keycloak
 
 ## Running tests
-### Unit tests
-In order to run unit tests only execute this command:
+### Unit & Integration tests
+In order to run all the tests execute this command:
 ```sh
 ./gradlew test
-```
-### Integration tests:
-In order to run integration tests only execute this command:
-```sh
-./gradlew integrationTest
 ```
 ### Test Coverage
 To measure the test coverage of your application, you can use Jacoco, which is integrated with Gradle. 
