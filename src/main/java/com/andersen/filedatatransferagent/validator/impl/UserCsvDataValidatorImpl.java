@@ -63,6 +63,8 @@ public class UserCsvDataValidatorImpl implements UserCsvDataValidator {
         if (!isValidEmail(email)) {
           throw new BadRequestException("Invalid Email: " + email);
         }
+
+        //todo if needed we can add more validation rules
       }
 
       log.info("CSV file is valid");
