@@ -43,7 +43,7 @@ Application properties are divided into several parts:
 * [application-batch.yaml](src%2Fmain%2Fresources%2Fapplication-batch.yaml) - configures Spring Batch
 * [application-datasource.yaml](src%2Fmain%2Fresources%2Fapplication-datasource.yaml) - configures Datasource
 * [application-kafka.yaml](src%2Fmain%2Fresources%2Fapplication-kafka.yaml) - configures Kafka
-* [application-liquibase.yaml](src%2Fmain%2Fresources%2Fapplication-liquibase.yaml) - configures liquibase
+* [application-liquibase.yaml](src%2Fmain%2Fresources%2Fapplication-liquibase.yaml) - configures Liquibase
 * [application-log.yaml](src%2Fmain%2Fresources%2Fapplication-log.yaml) - configures Logging
 ### Environment Variables
 These can be edited to satisfy your local needs
@@ -54,7 +54,7 @@ These can be edited to satisfy your local needs
 
 ## Usage
 ### API and request examples
-API and request example can be found on swagger
+API and request example can be found on swagger [click](http://localhost:8080/swagger-ui/index.html#/)
 ### Authentication
 We use open source solution called Keycloak
 
