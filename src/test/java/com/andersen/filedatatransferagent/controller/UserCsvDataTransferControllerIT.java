@@ -119,6 +119,31 @@ class UserCsvDataTransferControllerIT extends ConfiguredIntegrationTest {
     assertEquals(INTEGER_ONE, resultIds.size());
   }
 
+  @Test
+  @SneakyThrows
+  void givenCsvData_whenTriggerTransfer_AndThereIsWriteError_ThenSaveErrorInTheDb() {
+    //todo think how to mock kafka template
+    //GIVEN
+    final MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+    body.add(FILENAME, new FileSystemResource(usersCsvResource.getFile()));
+
+    //WHEN
+    final RestClient restClient = getRc();
+    final ResponseSpec rs = restClient.post()
+        .uri(getLocalhostUrl(TRIGGER_PATH))
+        .contentType(MULTIPART_FORM_DATA)
+        .body(body)
+        .retrieve();
+
+    //THEN
+    assertEquals(OK, rs.toEntity(Void.class).getStatusCode());
+    await().atMost(TIMEOUT, TimeUnit.SECONDS).until(this::jobIsCompleted);
+
+    final List<Long> resultIds = new ArrayList<>();
+    jdbcTemplate.query(FIND_FAILED_RECORDS, addFailedRecordIds(resultIds));
+    assertEquals(INTEGER_ONE, resultIds.size());
+  }
+
   private boolean jobIsCompleted() {
     final String status = getJobStatus();
     return COMPLETED.equals(status);
