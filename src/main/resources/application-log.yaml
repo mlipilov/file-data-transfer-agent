@@ -2,6 +2,7 @@ logging:
   level:
     org:
       springframework:
+        jdbc: debug
         beans: error
         context: error
         kafka: error

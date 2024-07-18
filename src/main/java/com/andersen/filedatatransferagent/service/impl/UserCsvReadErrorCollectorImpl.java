@@ -29,21 +29,23 @@ public class UserCsvReadErrorCollectorImpl implements UserCsvReadErrorCollector 
 
   private static final String SAVE_ERR_SQL = """
       insert into
-      user_csv_transfer_errors('occurred_at', 'error_description',
-                               'operation-type', 'input', 'line_number')
+      user_csv_transfer_errors(occurred_at, error_description,
+                               operation_type, input, line_number)
       values (?, ?, ?, ?, ?)
       """;
 
   private final JdbcTemplate jdbcTemplate;
 
   @Override
-  @Transactional
+  @Transactional(transactionManager = "transactionManager")
   public void collect(final Exception ex) {
-    if (ex.getCause() instanceof FlatFileParseException flatFileEx) {
+    if (ex instanceof FlatFileParseException flatFileEx) {
       log.info("Started collecting read error...");
       final PreparedStatementCreator creator = conn -> getPreparedStatement(flatFileEx, conn);
       final PreparedStatementCallback<Boolean> callback = PreparedStatement::execute;
       jdbcTemplate.execute(creator, callback);
+    } else {
+      log.error("An error occurred", ex);
     }
   }
 

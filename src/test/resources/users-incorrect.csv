@@ -1,0 +1,2 @@
+username,firstName,lastName,age,street,city,state,zip,phoneNumber,email,workspaces
+john_doe,John,Doe,30,123 Main St,Anytown,CA,12345,555-1234,john@example.com,"['{""id"":1,""nameeeeee"":""Workspace 1"",""creationDateeee"":""2024-04-25"",""descriptionnnnn"":""Description for Workspace 1""},{""id"":2,""name"":""Workspace 2"",""creationDate"":""2024-04-26"",""description"":""Description for Workspace 2""}]"
