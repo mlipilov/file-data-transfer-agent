@@ -18,7 +18,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
@@ -60,7 +59,6 @@ public class IsolatedHappyPathIT extends ConfiguredIntegrationTest {
   @Test
   @SneakyThrows
   void givenCsvData_whenTriggerTransfer_ThenBatchTaskExecutedSuccessfully() {
-    Mockito.reset(userKafkaTemplate);
     final var consumerProperties = getConsumerProperties(kafkaProperties);
     final KafkaConsumer<String, User> consumer = new KafkaConsumer<>(consumerProperties);
     consumer.subscribe(List.of(USER_CSV_DATA_TOPIC));
