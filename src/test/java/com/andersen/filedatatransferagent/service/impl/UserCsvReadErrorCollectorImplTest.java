@@ -43,10 +43,9 @@ class UserCsvReadErrorCollectorImplTest {
   void givenFlatFileParseEx_whenCollectErrorData_ThenCollect() {
     //GIVEN
     final FlatFileParseException parseEx = new FlatFileParseException(EMPTY, EMPTY, INTEGER_ONE);
-    final IllegalArgumentException illegalArgumentEx = new IllegalArgumentException(parseEx);
 
     //WHEN
-    userCsvReadErrorCollectorImpl.collect(illegalArgumentEx);
+    userCsvReadErrorCollectorImpl.collect(parseEx);
 
     //THEN
     verify(jdbcTemplate, times(INTEGER_ONE)).execute(

@@ -2,12 +2,12 @@ package com.andersen.filedatatransferagent.config.batch;
 
 import static com.andersen.filedatatransferagent.constants.UserCsvConstants.HEADERS;
 import static com.andersen.filedatatransferagent.utils.FileUtils.readFileBytes;
-import static java.lang.System.currentTimeMillis;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ZERO;
 
 import com.andersen.filedatatransferagent.model.user.User;
 import java.nio.file.Paths;
+import java.util.UUID;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
@@ -41,6 +41,7 @@ public class UserCsvDataTransferConfig {
   private static final String USER_JOB_STEP_NAME = "transferCsvUserDataStep";
   private static final String SYNCHRONIZATION_ALWAYS = "SYNCHRONIZATION_ALWAYS";
   private static final String DELIMITER = ",";
+  private static final String UNDERSCORE = "_";
 
   /**
    * The userReader method is a factory method that creates a FlatFileItemReader for reading User objects from a CSV file.
@@ -131,7 +132,7 @@ public class UserCsvDataTransferConfig {
       final JobExecutionListener userJobListener,
       final Step userJobStep
   ) {
-    final String jobName = USER_JOB_NAME.concat(DELIMITER) + currentTimeMillis();
+    final String jobName = USER_JOB_NAME.concat(UNDERSCORE).concat(UUID.randomUUID().toString());
     return new JobBuilder(jobName, jobRepository)
         .listener(userJobListener)
         .start(userJobStep)
