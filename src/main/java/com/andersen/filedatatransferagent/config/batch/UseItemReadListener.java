@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.ItemReadListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Component
@@ -21,6 +22,7 @@ public class UseItemReadListener implements ItemReadListener<User> {
    * @param ex the exception that occurred during the read operation
    */
   @Override
+  @Transactional(transactionManager = "transactionManager")
   public void onReadError(@NonNull final Exception ex) {
     log.error(ex.getMessage(), ex);
     userCsvReadErrorCollector.collect(ex);
