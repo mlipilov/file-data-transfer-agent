@@ -8,6 +8,7 @@ import static java.util.concurrent.CompletableFuture.runAsync;
 import com.andersen.filedatatransferagent.facade.UserCsvDataTransferFacade;
 import com.andersen.filedatatransferagent.validator.UserCsvDataValidator;
 import java.nio.file.Path;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,10 @@ public class UserCsvDataTransferFacadeImpl implements UserCsvDataTransferFacade 
 
   private JobParameters toJobParameters(final MultipartFile csvFile, final Path tmpFile) {
     final JobParametersBuilder builder = new JobParametersBuilder();
-    builder.addJobParameter(csvFile.getName(), tmpFile.toUri().getPath(), String.class);
+    builder.addJobParameter(
+        csvFile.getName().concat(UUID.randomUUID().toString()),
+        tmpFile.toUri().getPath(),
+        String.class);
     return builder.toJobParameters();
   }
 
