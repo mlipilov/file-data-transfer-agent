@@ -6,8 +6,7 @@ services:
   file_data_transfer_agent:
     container_name: file_data_transfer_agent
     platform: linux/amd64
-    build:
-      dockerfile: Dockerfile
+    image: home1docker1/file-data-transfer-agent:latest
     env_file:
       - .env
     ports:
